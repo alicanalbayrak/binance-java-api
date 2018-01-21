@@ -6,8 +6,10 @@ import com.binance.api.client.constant.BinanceApiConstants;
 import com.binance.api.client.domain.event.AggTradeEvent;
 import com.binance.api.client.domain.event.CandlestickEvent;
 import com.binance.api.client.domain.event.DepthEvent;
+import com.binance.api.client.domain.event.Ticker24HrEvent;
 import com.binance.api.client.domain.event.UserDataUpdateEvent;
 import com.binance.api.client.domain.market.CandlestickInterval;
+import java.util.List;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 
@@ -36,13 +38,28 @@ public class BinanceApiWebSocketClientImpl implements BinanceApiWebSocketClient,
     createNewWebSocket(channel, new BinanceApiWebSocketListener<>(callback, CandlestickEvent.class));
   }
 
-  public void onAggTradeEvent(String symbol, BinanceApiCallback<AggTradeEvent> callback) {
+    @Override
+    public void onCandlestickEvent(List<String> symbols, CandlestickInterval interval,
+        BinanceApiCallback<CandlestickEvent> callback) {
+        symbols.stream()
+            .map(symbol -> String.format("%s@kline_%s", symbol, interval.getIntervalId()))
+            .reduce((s1, s2) -> s1 + "/" + s2)
+            .ifPresent(channel -> createNewWebSocket(channel, new BinanceApiWebSocketListener<>(callback, CandlestickEvent.class)));
+    }
+
+    public void onAggTradeEvent(String symbol, BinanceApiCallback<AggTradeEvent> callback) {
     final String channel = String.format("%s@aggTrade", symbol);
     createNewWebSocket(channel, new BinanceApiWebSocketListener<>(callback, AggTradeEvent.class));
   }
 
   public void onUserDataUpdateEvent(String listenKey, BinanceApiCallback<UserDataUpdateEvent> callback) {
     createNewWebSocket(listenKey, new BinanceApiWebSocketListener<>(callback, UserDataUpdateEvent.class));
+  }
+
+  @Override
+  public void onTicker24HrEvent(String symbol, BinanceApiCallback<Ticker24HrEvent> callback) {
+    final String channel = String.format("%s@ticker", symbol);
+    createNewWebSocket(channel, new BinanceApiWebSocketListener<>(callback, Ticker24HrEvent.class));
   }
 
   private void createNewWebSocket(String channel, BinanceApiWebSocketListener<?> listener) {
