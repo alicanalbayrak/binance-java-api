@@ -28,6 +28,5 @@ public class MarketDataStreamExample {
 
     client.onCandlestickEvent(new ArrayList<>(Arrays.asList("ltcbtc", "etcbtc")), CandlestickInterval.ONE_MINUTE, System.out::println);
 
-    client.onTicker24HrEvent("ethbtc", System.out::println);
   }
 }
