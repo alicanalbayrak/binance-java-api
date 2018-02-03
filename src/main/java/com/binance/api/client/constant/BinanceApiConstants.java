@@ -18,7 +18,7 @@ public class BinanceApiConstants {
   /**
    * Streaming API endpoint for listen multiple symbols on single socket
    */
-  public static final String WS_API_COMBINE_STREAM_URL = "wss://stream.binance.com:9443/stream?streams='";
+  public static final String WS_API_COMBINE_STREAM_URL = "wss://stream.binance.com:9443/stream?streams=";
 
   /**
    * HTTP Header to be used for API-KEY authentication.
