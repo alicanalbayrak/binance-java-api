@@ -26,7 +26,14 @@ public class MarketDataStreamExample {
     // Obtain 1m candlesticks in real-time for ETH/BTC
     client.onCandlestickEvent("ethbtc", CandlestickInterval.ONE_MINUTE, response -> System.out.println(response));
 
+    // Listen 1M interval candlestick data of given multiple symbols on singe socket
     client.onCandlestickEvent(new ArrayList<>(Arrays.asList("ltcbtc", "etcbtc")), CandlestickInterval.ONE_MINUTE, System.out::println);
+
+    // Listen aggregated events of given multiple symbols on singe socket
+    client.onAggTradeEvent(new ArrayList<>(Arrays.asList("ltcbtc", "etcbtc")), System.out::println);
+
+    // Listen depth events of given multiple symbols on singe socket
+    client.onDepthEvent(new ArrayList<>(Arrays.asList("ltcbtc", "etcbtc")), System.out::println);
 
   }
 }
