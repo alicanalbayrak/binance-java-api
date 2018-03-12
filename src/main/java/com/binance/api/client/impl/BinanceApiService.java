@@ -10,6 +10,7 @@ import com.binance.api.client.domain.account.DepositHistory;
 import com.binance.api.client.domain.account.NewOrderResponse;
 import com.binance.api.client.domain.account.Order;
 import com.binance.api.client.domain.account.Trade;
+import com.binance.api.client.domain.account.TradeHistoryItem;
 import com.binance.api.client.domain.account.WithdrawHistory;
 import com.binance.api.client.domain.event.ListenKey;
 import com.binance.api.client.domain.general.ExchangeInfo;
@@ -51,6 +52,13 @@ public interface BinanceApiService {
   @GET("/api/v1/depth")
   Call<OrderBook> getOrderBook(@Query("symbol") String symbol, @Query("limit") Integer limit);
 
+  @GET("/api/v1/trades")
+  Call<List<TradeHistoryItem>> getTrades(@Query("symbol") String symbol, @Query("limit") Integer limit);
+
+  @Headers(BinanceApiConstants.ENDPOINT_SECURITY_TYPE_APIKEY_HEADER)
+  @GET("/api/v1/historicalTrades")
+  Call<List<TradeHistoryItem>> getHistoricalTrades(@Query("symbol") String symbol, @Query("limit") Integer limit, @Query("fromId") Long fromId);
+
   @GET("/api/v1/aggTrades")
   Call<List<AggTrade>> getAggTrades(@Query("symbol") String symbol, @Query("fromId") String fromId, @Query("limit") Integer limit,
                                     @Query("startTime") Long startTime, @Query("endTime") Long endTime);
@@ -61,9 +69,15 @@ public interface BinanceApiService {
 
   @GET("/api/v1/ticker/24hr")
   Call<TickerStatistics> get24HrPriceStatistics(@Query("symbol") String symbol);
+  
+  @GET("/api/v1/ticker/24hr")
+  Call<List<TickerStatistics>> getAll24HrPriceStatistics();
 
   @GET("/api/v1/ticker/allPrices")
   Call<List<TickerPrice>> getLatestPrices();
+  
+  @GET("/api/v3/ticker/price")
+  Call<TickerPrice> getLatestPrice(@Query("symbol") String symbol);
 
   @GET("/api/v1/ticker/allBookTickers")
   Call<List<BookTicker>> getBookTickers();

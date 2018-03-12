@@ -10,6 +10,7 @@ import com.binance.api.client.domain.account.NewOrder;
 import com.binance.api.client.domain.account.NewOrderResponse;
 import com.binance.api.client.domain.account.Order;
 import com.binance.api.client.domain.account.Trade;
+import com.binance.api.client.domain.account.TradeHistoryItem;
 import com.binance.api.client.domain.account.WithdrawHistory;
 import com.binance.api.client.domain.account.request.AllOrdersRequest;
 import com.binance.api.client.domain.account.request.CancelOrderRequest;
@@ -66,6 +67,16 @@ public class BinanceApiAsyncRestClientImpl implements BinanceApiAsyncRestClient 
   }
 
   @Override
+  public void getTrades(String symbol, Integer limit, BinanceApiCallback<List<TradeHistoryItem>> callback) {
+    binanceApiService.getTrades(symbol, limit).enqueue(new BinanceApiCallbackAdapter<>(callback));
+  }
+
+  @Override
+  public void getHistoricalTrades(String symbol, Integer limit, Long fromId, BinanceApiCallback<List<TradeHistoryItem>> callback) {
+    binanceApiService.getHistoricalTrades(symbol, limit, fromId).enqueue(new BinanceApiCallbackAdapter<>(callback));
+  }
+
+  @Override
   public void getAggTrades(String symbol, String fromId, Integer limit, Long startTime, Long endTime, BinanceApiCallback<List<AggTrade>> callback) {
     binanceApiService.getAggTrades(symbol, fromId, limit, startTime, endTime).enqueue(new BinanceApiCallbackAdapter<>(callback));
   }
@@ -89,10 +100,20 @@ public class BinanceApiAsyncRestClientImpl implements BinanceApiAsyncRestClient 
   public void get24HrPriceStatistics(String symbol, BinanceApiCallback<TickerStatistics> callback) {
     binanceApiService.get24HrPriceStatistics(symbol).enqueue(new BinanceApiCallbackAdapter<>(callback));
   }
+  
+  @Override
+  public void getAll24HrPriceStatistics(BinanceApiCallback<List<TickerStatistics>> callback) {
+    binanceApiService.getAll24HrPriceStatistics().enqueue(new BinanceApiCallbackAdapter<>(callback));
+  }
 
   @Override
   public void getAllPrices(BinanceApiCallback<List<TickerPrice>> callback) {
     binanceApiService.getLatestPrices().enqueue(new BinanceApiCallbackAdapter<>(callback));
+  }
+  
+  @Override
+  public void getPrice(String symbol , BinanceApiCallback<TickerPrice> callback) {
+    binanceApiService.getLatestPrice(symbol).enqueue(new BinanceApiCallbackAdapter<>(callback));
   }
 
   @Override

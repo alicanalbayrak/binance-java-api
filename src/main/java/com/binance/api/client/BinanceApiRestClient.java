@@ -7,6 +7,7 @@ import com.binance.api.client.domain.account.NewOrder;
 import com.binance.api.client.domain.account.NewOrderResponse;
 import com.binance.api.client.domain.account.Order;
 import com.binance.api.client.domain.account.Trade;
+import com.binance.api.client.domain.account.TradeHistoryItem;
 import com.binance.api.client.domain.account.WithdrawHistory;
 import com.binance.api.client.domain.account.request.AllOrdersRequest;
 import com.binance.api.client.domain.account.request.CancelOrderRequest;
@@ -58,6 +59,23 @@ public interface BinanceApiRestClient {
   OrderBook getOrderBook(String symbol, Integer limit);
 
   /**
+   * Get recent trades (up to last 500). Weight: 1
+   *
+   * @param symbol ticker symbol (e.g. ETHBTC)
+   * @param limit of last trades (Default 500; max 500.)
+   */
+  List<TradeHistoryItem> getTrades(String symbol, Integer limit);
+
+  /**
+   * Get older trades. Weight: 5
+   *
+   * @param symbol ticker symbol (e.g. ETHBTC)
+   * @param limit of last trades (Default 500; max 500.)
+   * @param fromId TradeId to fetch from. Default gets most recent trades.
+   */
+  List<TradeHistoryItem> getHistoricalTrades(String symbol, Integer limit, Long fromId);
+
+  /**
    * Get compressed, aggregate trades. Trades that fill at the time, from the same order, with
    * the same price will have the quantity aggregated.
    *
@@ -105,11 +123,23 @@ public interface BinanceApiRestClient {
    * @param symbol ticker symbol (e.g. ETHBTC)
    */
   TickerStatistics get24HrPriceStatistics(String symbol);
+  
+  /**
+   * Get 24 hour price change statistics for all symbols.
+   */
+  List<TickerStatistics> getAll24HrPriceStatistics();
 
   /**
    * Get Latest price for all symbols.
    */
   List<TickerPrice> getAllPrices();
+  
+  /**
+   * Get latest price for <code>symbol</code>.
+   * 
+   * @param symbol ticker symbol (e.g. ETHBTC)
+   */
+  TickerPrice getPrice(String symbol);
 
   /**
    * Get best price/qty on the order book for all symbols.
