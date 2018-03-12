@@ -1,5 +1,6 @@
 package com.binance.api.client.domain.event;
 
+import com.binance.api.client.constant.BinanceApiConstants;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 public class CombinedCandleStickEvent {
@@ -26,7 +27,7 @@ public class CombinedCandleStickEvent {
 
     @Override
     public String toString() {
-        return new ToStringBuilder(this)
+        return new ToStringBuilder(this, BinanceApiConstants.TO_STRING_BUILDER_STYLE)
                 .append("stream", stream)
                 .append("data", data)
                 .toString();
